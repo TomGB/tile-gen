@@ -1,5 +1,6 @@
 # Tile gen specific
 /saved/*
+/build/bundle.js
 
 # Logs
 logs

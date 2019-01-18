@@ -1,5 +1,4 @@
 const tinygradient = require('tinygradient');
-const draw = require('./utils/draw')
 
 const getRandomColor = () => {
   var letters = '0123456789ABCDEF';
@@ -10,7 +9,7 @@ const getRandomColor = () => {
   return color;
 }
 
-const generate = async () => {
+const generate = () => {
   const colourMap = [];
 
   const gradient1 = tinygradient([
@@ -35,7 +34,7 @@ const generate = async () => {
     colourMap.push(colourRow);
   }
 
-  await draw(colourMap);
+  return colourMap;
 }
 
 module.exports = generate;

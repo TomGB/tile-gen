@@ -2,6 +2,8 @@
 
 A little node app to generate a tiled background for phones.
 
+https://tomgb.github.io/tile-gen/
+
 ## Usage
 
 `npm run gen -- [name of program]`

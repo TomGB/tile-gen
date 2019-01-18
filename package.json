@@ -1,12 +1,14 @@
 {
-  "name": "grad-canvas",
+  "name": "tile-gen",
   "version": "1.0.0",
-  "description": "",
+  "description": "Generates tiles",
   "main": "index.js",
   "scripts": {
-    "gen": "node index.js"
+    "gen": "node index.js",
+    "build": "browserify ./src/browser/script.js -o ./build/bundle.js",
+    "deploy": "npm run build && gh-pages -d build"
   },
-  "author": "",
+  "author": "Tom Banister",
   "license": "ISC",
   "dependencies": {
     "ansi-escapes": "^3.1.0",
@@ -14,5 +16,9 @@
     "imgcat": "^2.3.0",
     "terminal-image": "^0.1.2",
     "tinygradient": "^1.0.0"
+  },
+  "devDependencies": {
+    "browserify": "^16.2.3",
+    "gh-pages": "^2.0.1"
   }
 }
