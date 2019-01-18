@@ -4,11 +4,15 @@ const twoGradients = require('../patterns/twoGradients');
 
 const newImage = async () => {
     const colourMap = twoGradients();
-    const canvas = await generateCanvas(colourMap);
+    canvas = await generateCanvas(colourMap);
 
-    const canvasArea = document.getElementById("canvas-area");
-    canvasArea.innerHTML = '';
-    canvasArea.appendChild(canvas);
+    const imageArea = document.getElementById("image-area");
+
+    const image = new Image();
+    image.src = canvas.toDataURL("image/png");
+
+    imageArea.innerHTML = '';
+	imageArea.appendChild(image);
 };
 
 document.getElementById('new-canvas').addEventListener('click', () => {

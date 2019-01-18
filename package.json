@@ -6,7 +6,8 @@
   "scripts": {
     "gen": "node index.js",
     "build": "browserify ./src/browser/script.js -o ./build/bundle.js",
-    "deploy": "npm run build && gh-pages -d build"
+    "deploy": "npm run build && gh-pages -d build",
+    "open": "open ./build/index.html"
   },
   "author": "Tom Banister",
   "license": "ISC",
