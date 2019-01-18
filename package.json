@@ -1,0 +1,18 @@
+{
+  "name": "grad-canvas",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "gen": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ansi-escapes": "^3.1.0",
+    "canvas": "^2.3.1",
+    "imgcat": "^2.3.0",
+    "terminal-image": "^0.1.2",
+    "tinygradient": "^1.0.0"
+  }
+}
