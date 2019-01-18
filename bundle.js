@@ -2125,11 +2125,11 @@ const runPattern = pattern => {
 }
 
 const newImage = async () => {
-    const { pattern } = queryString.parse(location.search);
+    const query = queryString.parse(location.search);
 
-    console.log(pattern)
+    console.log(query)
 
-    const colourMap = runPattern(pattern);
+    const colourMap = runPattern(query.pattern);
     canvas = await generateCanvas(colourMap);
 
     const imageArea = document.getElementById("image-area");
