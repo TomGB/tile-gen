@@ -9,3 +9,7 @@ A little node app to generate a tiled background for phones.
 e.g.
 
 `npm run gen -- twoGradients`
+
+## Example
+
+![Screenshot of output](assets/example.png?raw=true "Screenshot")
