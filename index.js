@@ -6,10 +6,14 @@ const patternPrograms = {
     twoGradients,
 };
 
-const start = () => {
+const start = async () => {
     const pattern = process.argv[2];
 
-    if (!pattern) return gradEveryLine();
+    if (!pattern) {
+        console.log('available patterns:')
+        Object.keys(patternPrograms).forEach(name => console.log(name));
+        return;
+    }
 
     const selectedPattern = patternPrograms[pattern];
 

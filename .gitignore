@@ -1,3 +1,6 @@
+# Tile gen specific
+/saved/*
+
 # Logs
 logs
 *.log

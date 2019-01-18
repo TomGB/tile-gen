@@ -10,26 +10,26 @@ const getRandomColor = () => {
   return color;
 }
 
-const generate = () => {
-    const colourMap = [];
-  
-    for (let x = 0; x < 20; x++) {
-      const gradient = tinygradient([
-        getRandomColor(),
-        getRandomColor(),
-      ]).hsv(30);
-  
-      const colourRow = [];
-  
-      for (let y = 0; y < 30; y++) {
-        const { _r, _g, _b } = gradient[y];
-        colourRow.push({ r: _r, g: _g, b: _b });
-      }
-  
-      colourMap.push(colourRow);
+const generate = async () => {
+  const colourMap = [];
+
+  for (let x = 0; x < 20; x++) {
+    const gradient = tinygradient([
+      getRandomColor(),
+      getRandomColor(),
+    ]).hsv(30);
+
+    const colourRow = [];
+
+    for (let y = 0; y < 30; y++) {
+      const { _r, _g, _b } = gradient[y];
+      colourRow.push({ r: _r, g: _g, b: _b });
     }
 
-    draw(colourMap);
+    colourMap.push(colourRow);
+  }
+
+  await draw(colourMap);
 }
 
 module.exports = generate;

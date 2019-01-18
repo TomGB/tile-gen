@@ -1,3 +1,4 @@
+const fs = require('fs');
 const { createCanvas } = require('canvas')
 const ansiEscapes = require('ansi-escapes');
 
@@ -5,7 +6,7 @@ const rgb = (r, g, b) => {
   return `rgb(${Math.floor(r)}, ${Math.floor(g)}, ${Math.floor(b)})`;
 }
 
-const draw = (colourMap) => {
+const draw = async (colourMap) => {
   const canvas = createCanvas(900, 1800)
   const ctx = canvas.getContext('2d')
 
@@ -27,7 +28,14 @@ const draw = (colourMap) => {
   
   var buf = canvas.toBuffer();
   
-  console.log(ansiEscapes.image(buf));  
+  console.log(ansiEscapes.image(buf));
+
+  const nextFileIndex = fs.readdirSync('./saved').length
+  const fileName = `./saved/output${nextFileIndex}.png`;
+
+  await fs.writeFileSync(fileName, buf);
+
+  console.log('image saved as', `${fileName}`);
 }
 
 module.exports = draw;
