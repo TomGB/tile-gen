@@ -2111,25 +2111,7 @@ else {
 
 
 },{"tinycolor2":6}],8:[function(require,module,exports){
-const queryString = require('query-string');
-const generateCanvas = require('../utils/generateCanvas');
-const twoGradients = require('../patterns/twoGradients');
-const gradEveryLine = require('../patterns/gradEveryLine');
- 
-const runPattern = (pattern, options) => {
-    if (pattern === 'gradEveryLine') {
-        return gradEveryLine();
-    }
-
-    return twoGradients(options);
-}
-
-const newImage = async options => {
-    const { pattern } = queryString.parse(location.search);
-
-    const colourMap = runPattern(pattern, options);
-    canvas = await generateCanvas(colourMap);
-
+const addImageToPage = canvas => {
     const imageArea = document.getElementById("image-area");
 
     const image = new Image();
@@ -2137,44 +2119,77 @@ const newImage = async options => {
 
     imageArea.innerHTML = '';
 	imageArea.appendChild(image);
+}
+
+module.exports = addImageToPage;
+},{}],9:[function(require,module,exports){
+const generateCanvas = require('../utils/generateCanvas');
+const getPatternFunction = require('../utils/getPatternFunction');
+const setupColourPickers = require('./setupColourPickers');
+const setupNewRandomButton = require('./setupNewRandomButton');
+const setupBlackBoxButton = require('./setupBlackBoxButton');
+const addImageToPage = require('./addImageToPage');
+
+const options = {
+    patternFunction: getPatternFunction(),
 };
 
-const newButton = document.getElementById('new-canvas')
+const newImage = async () => {
+    const colourMap = options.patternFunction(options);
+    const canvas = await generateCanvas(colourMap, options);
+    addImageToPage(canvas);
+};
 
-newButton.addEventListener('click', () => {
-    newImage();
-});
-
-let timeout;
-
-const debounce = callback => {
-    clearTimeout(timeout);
-    timeout = setTimeout(callback, 200);
-}
-
-const colourPickers = [...document.getElementsByClassName('colour-picker')];
-
-const colours = {
-    colour1: '#ffffff',
-    colour2: '#ffffff',
-    colour3: '#ffffff',
-    colour4: '#ffffff',
-}
-
-colourPickers.forEach(picker => {
-    picker.addEventListener('change', () => {
-        colours[picker.id] = picker.value;
-
-        debounce(() => {
-            console.log('gogo')
-            newImage(colours)
-        });
-    });
-});
+setupNewRandomButton(newImage);
+setupColourPickers(options, newImage);
+setupBlackBoxButton(options, newImage);
 
 newImage();
 
-},{"../patterns/gradEveryLine":9,"../patterns/twoGradients":10,"../utils/generateCanvas":11,"query-string":4}],9:[function(require,module,exports){
+},{"../utils/generateCanvas":16,"../utils/getPatternFunction":17,"./addImageToPage":8,"./setupBlackBoxButton":10,"./setupColourPickers":11,"./setupNewRandomButton":12}],10:[function(require,module,exports){
+const setupBlackBoxButton = (options, newImage) => {
+    const blackSpaceButton = document.getElementById('black-space');
+
+    blackSpaceButton.addEventListener('click', () => {
+        options.appBox = !options.appBox;
+        newImage(options);
+    })
+};
+
+module.exports = setupBlackBoxButton;
+
+},{}],11:[function(require,module,exports){
+const debounce = require('../utils/debounce');
+
+const setupColourPickers = (options, newImage) => {
+    const colourPickers = [...document.getElementsByClassName('colour-picker')];
+
+    colourPickers.forEach(picker => {
+        picker.addEventListener('change', () => {
+            options.colours[picker.id] = picker.value;
+    
+            debounce(() => {
+                console.log('gogo')
+                newImage(options)
+            });
+        });
+    });
+}
+
+module.exports = setupColourPickers;
+
+},{"../utils/debounce":15}],12:[function(require,module,exports){
+const setupNewRandomButton = newImage => {
+    const newButton = document.getElementById('new-canvas')
+
+    newButton.addEventListener('click', () => {
+        newImage();
+    });
+};
+
+module.exports = setupNewRandomButton;
+
+},{}],13:[function(require,module,exports){
 const tinygradient = require('tinygradient');
 
 const getRandomColor = () => {
@@ -2209,7 +2224,7 @@ const generate = () => {
 }
 
 module.exports = generate;
-},{"tinygradient":7}],10:[function(require,module,exports){
+},{"tinygradient":7}],14:[function(require,module,exports){
 const tinygradient = require('tinygradient');
 
 const getRandomColor = () => {
@@ -2221,33 +2236,27 @@ const getRandomColor = () => {
   return color;
 }
 
-const generate = options => {
+const generate = (options = {}) => {
   const colourMap = [];
 
-  let gradient1;
-  let gradient2;
-
-  if (options) {
-    gradient1 = tinygradient([
-      options.colour1,
-      options.colour2,
-    ]).hsv(20);
-
-    gradient2 = tinygradient([
-      options.colour3,
-      options.colour4,
-    ]).hsv(30);
-  } else {
-    gradient1 = tinygradient([
-      getRandomColor(),
-      getRandomColor(),
-    ]).hsv(20);
-  
-    gradient2 = tinygradient([
-      getRandomColor(),
-      getRandomColor(),
-    ]).hsv(30);
+  if (!options.colours) {
+    options.colours = {
+      colour1: getRandomColor(),
+      colour2: getRandomColor(),
+      colour3: getRandomColor(),
+      colour4: getRandomColor(),
+    }
   }
+
+  const gradient1 = tinygradient([
+    options.colours.colour1,
+    options.colours.colour2,
+  ]).hsv(20);
+
+  const gradient2 = tinygradient([
+    options.colours.colour3,
+    options.colours.colour4,
+  ]).hsv(30);
 
   for (let x = 0; x < 20; x++) {
     const colourRow = [];
@@ -2265,7 +2274,17 @@ const generate = options => {
 }
 
 module.exports = generate;
-},{"tinygradient":7}],11:[function(require,module,exports){
+},{"tinygradient":7}],15:[function(require,module,exports){
+let timeout;
+
+const debounce = callback => {
+    clearTimeout(timeout);
+    timeout = setTimeout(callback, 200);
+}
+
+module.exports = debounce;
+
+},{}],16:[function(require,module,exports){
 const { createCanvas } = require('canvas')
 
 const tileSize = 106;
@@ -2274,7 +2293,7 @@ const rgb = (r, g, b) => {
   return `rgb(${Math.floor(r)}, ${Math.floor(g)}, ${Math.floor(b)})`;
 }
 
-const generateCanvas = async (colourMap) => {
+const generateCanvas = async (colourMap, options = {}) => {
   const canvas = createCanvas(900, 1800)
   const ctx = canvas.getContext('2d')
 
@@ -2294,9 +2313,35 @@ const generateCanvas = async (colourMap) => {
     }
   }
 
+  if (options.appBox) {
+    ctx.rotate(-(Math.PI / 4));
+
+    ctx.fillStyle = 'black';
+  
+    ctx.fillRect(450,1125,1000,1000);
+  }
+ 
   return canvas;
 }
 
 module.exports = generateCanvas;
 
-},{"canvas":1}]},{},[8]);
+},{"canvas":1}],17:[function(require,module,exports){
+const queryString = require('query-string');
+const twoGradients = require('../patterns/twoGradients');
+const gradEveryLine = require('../patterns/gradEveryLine');
+
+const selectPattern = (pattern) => {
+    if (pattern === 'gradEveryLine') {
+        return gradEveryLine;
+    }
+
+    return twoGradients;
+}
+
+const getPatternFunction = () => {
+    const { pattern } = queryString.parse(location.search);
+    return selectPattern(pattern);
+}
+module.exports = getPatternFunction;
+},{"../patterns/gradEveryLine":13,"../patterns/twoGradients":14,"query-string":4}]},{},[9]);
