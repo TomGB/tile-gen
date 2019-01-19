@@ -15,7 +15,7 @@ const newImage = async () => {
     addImageToPage(canvas);
 };
 
-setupNewRandomButton(newImage);
+setupNewRandomButton(options, newImage);
 setupColourPickers(options, newImage);
 setupBlackBoxButton(options, newImage);
 
