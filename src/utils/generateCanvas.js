@@ -6,7 +6,7 @@ const rgb = (r, g, b) => {
   return `rgb(${Math.floor(r)}, ${Math.floor(g)}, ${Math.floor(b)})`;
 }
 
-const generateCanvas = async (colourMap) => {
+const generateCanvas = async (colourMap, options = {}) => {
   const canvas = createCanvas(900, 1800)
   const ctx = canvas.getContext('2d')
 
@@ -26,6 +26,14 @@ const generateCanvas = async (colourMap) => {
     }
   }
 
+  if (options.appBox) {
+    ctx.rotate(-(Math.PI / 4));
+
+    ctx.fillStyle = 'black';
+  
+    ctx.fillRect(450,1125,1000,1000);
+  }
+ 
   return canvas;
 }
 

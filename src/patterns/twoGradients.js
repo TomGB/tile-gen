@@ -9,33 +9,27 @@ const getRandomColor = () => {
   return color;
 }
 
-const generate = options => {
+const generate = (options = {}) => {
   const colourMap = [];
 
-  let gradient1;
-  let gradient2;
-
-  if (options) {
-    gradient1 = tinygradient([
-      options.colour1,
-      options.colour2,
-    ]).hsv(20);
-
-    gradient2 = tinygradient([
-      options.colour3,
-      options.colour4,
-    ]).hsv(30);
-  } else {
-    gradient1 = tinygradient([
-      getRandomColor(),
-      getRandomColor(),
-    ]).hsv(20);
-  
-    gradient2 = tinygradient([
-      getRandomColor(),
-      getRandomColor(),
-    ]).hsv(30);
+  if (!options.colours) {
+    options.colours = {
+      colour1: getRandomColor(),
+      colour2: getRandomColor(),
+      colour3: getRandomColor(),
+      colour4: getRandomColor(),
+    }
   }
+
+  const gradient1 = tinygradient([
+    options.colours.colour1,
+    options.colours.colour2,
+  ]).hsv(20);
+
+  const gradient2 = tinygradient([
+    options.colours.colour3,
+    options.colours.colour4,
+  ]).hsv(30);
 
   for (let x = 0; x < 20; x++) {
     const colourRow = [];
