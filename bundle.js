@@ -2116,18 +2116,18 @@ const generateCanvas = require('../utils/generateCanvas');
 const twoGradients = require('../patterns/twoGradients');
 const gradEveryLine = require('../patterns/gradEveryLine');
  
-const runPattern = pattern => {
+const runPattern = (pattern, options) => {
     if (pattern === 'gradEveryLine') {
         return gradEveryLine();
     }
 
-    return twoGradients();
+    return twoGradients(options);
 }
 
-const newImage = async () => {
+const newImage = async options => {
     const { pattern } = queryString.parse(location.search);
 
-    const colourMap = runPattern(pattern);
+    const colourMap = runPattern(pattern, options);
     canvas = await generateCanvas(colourMap);
 
     const imageArea = document.getElementById("image-area");
@@ -2139,9 +2139,38 @@ const newImage = async () => {
 	imageArea.appendChild(image);
 };
 
-document.getElementById('new-canvas').addEventListener('click', () => {
+const newButton = document.getElementById('new-canvas')
+
+newButton.addEventListener('click', () => {
     newImage();
-})
+});
+
+let timeout;
+
+const debounce = callback => {
+    clearTimeout(timeout);
+    timeout = setTimeout(callback, 200);
+}
+
+const colourPickers = [...document.getElementsByClassName('colour-picker')];
+
+const colours = {
+    colour1: '#ffffff',
+    colour2: '#ffffff',
+    colour3: '#ffffff',
+    colour4: '#ffffff',
+}
+
+colourPickers.forEach(picker => {
+    picker.addEventListener('change', () => {
+        colours[picker.id] = picker.value;
+
+        debounce(() => {
+            console.log('gogo')
+            newImage(colours)
+        });
+    });
+});
 
 newImage();
 
@@ -2192,18 +2221,33 @@ const getRandomColor = () => {
   return color;
 }
 
-const generate = () => {
+const generate = options => {
   const colourMap = [];
 
-  const gradient1 = tinygradient([
-    getRandomColor(),
-    getRandomColor(),
-  ]).hsv(20);
+  let gradient1;
+  let gradient2;
 
-  const gradient2 = tinygradient([
-    getRandomColor(),
-    getRandomColor(),
-  ]).hsv(30);
+  if (options) {
+    gradient1 = tinygradient([
+      options.colour1,
+      options.colour2,
+    ]).hsv(20);
+
+    gradient2 = tinygradient([
+      options.colour3,
+      options.colour4,
+    ]).hsv(30);
+  } else {
+    gradient1 = tinygradient([
+      getRandomColor(),
+      getRandomColor(),
+    ]).hsv(20);
+  
+    gradient2 = tinygradient([
+      getRandomColor(),
+      getRandomColor(),
+    ]).hsv(30);
+  }
 
   for (let x = 0; x < 20; x++) {
     const colourRow = [];
@@ -2223,6 +2267,8 @@ const generate = () => {
 module.exports = generate;
 },{"tinygradient":7}],11:[function(require,module,exports){
 const { createCanvas } = require('canvas')
+
+const tileSize = 106;
 
 const rgb = (r, g, b) => {
   return `rgb(${Math.floor(r)}, ${Math.floor(g)}, ${Math.floor(b)})`;
@@ -2244,7 +2290,7 @@ const generateCanvas = async (colourMap) => {
 
       ctx.fillStyle = rgb(r, g, b);
   
-      ctx.fillRect(0 + x * 100, -800 + y * 100, 100 - 6, 100 - 6);
+      ctx.fillRect(-49 + x * tileSize, -792 + y * tileSize, tileSize - 6, tileSize - 6);
     }
   }
 
