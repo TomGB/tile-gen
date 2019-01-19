@@ -7,7 +7,8 @@
     "gen": "node index.js",
     "build": "browserify ./src/browser/script.js -o ./build/bundle.js",
     "deploy": "npm run build && gh-pages -d build",
-    "open": "open ./build/index.html"
+    "open": "open ./build/index.html",
+    "watch": "watchify ./src/browser/script.js -o ./build/bundle.js"
   },
   "author": "Tom Banister",
   "license": "ISC",
@@ -19,6 +20,7 @@
   },
   "devDependencies": {
     "browserify": "^16.2.3",
-    "gh-pages": "^2.0.1"
+    "gh-pages": "^2.0.1",
+    "watchify": "^3.11.0"
   }
 }

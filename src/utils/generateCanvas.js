@@ -1,5 +1,7 @@
 const { createCanvas } = require('canvas')
 
+const tileSize = 106;
+
 const rgb = (r, g, b) => {
   return `rgb(${Math.floor(r)}, ${Math.floor(g)}, ${Math.floor(b)})`;
 }
@@ -20,7 +22,7 @@ const generateCanvas = async (colourMap) => {
 
       ctx.fillStyle = rgb(r, g, b);
   
-      ctx.fillRect(0 + x * 100, -800 + y * 100, 100 - 6, 100 - 6);
+      ctx.fillRect(-49 + x * tileSize, -792 + y * tileSize, tileSize - 6, tileSize - 6);
     }
   }
 
