@@ -2140,7 +2140,7 @@ const newImage = async () => {
     addImageToPage(canvas);
 };
 
-setupNewRandomButton(newImage);
+setupNewRandomButton(options, newImage);
 setupColourPickers(options, newImage);
 setupBlackBoxButton(options, newImage);
 
@@ -2179,10 +2179,11 @@ const setupColourPickers = (options, newImage) => {
 module.exports = setupColourPickers;
 
 },{"../utils/debounce":15}],12:[function(require,module,exports){
-const setupNewRandomButton = newImage => {
+const setupNewRandomButton = (options, newImage) => {
     const newButton = document.getElementById('new-canvas')
 
     newButton.addEventListener('click', () => {
+        options.colours = false;
         newImage();
     });
 };
